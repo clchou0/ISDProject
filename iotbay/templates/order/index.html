@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+
+<!--
+Feature 03: Orders
+- List orders, searchable by order id and date
+- View order detail with items, total price, and status
+- Edit or cancel saved orders before payment
+- Customer sees own orders, staff/admin sees all
+
+Feature 05: Payments
+- Pay for a saved order using an existing payment method
+- View payment history (amount, date, order, method)
+- Customer sees own payments, staff/admin sees all
+-->
+
+<div class="card">
+	<div id="feedback">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% set msg = messages[0] %}
+            <p class="alert alert-{{ msg.type }}">{{ msg.message }}</p>
+          {% endif %}
+        {% endwith %}
+    </div>
+
+    <form hx-get="/api/orders/" hx-params="*" hx-target="#orders-table" hx-trigger="input changed delay:200ms, change, search" hx-swap="outerHTML">
+        <div style="display: flex; align-items: center; height: 45px;">
+            <span style="width: 150px;"><h3>Start Date:</h3></span>
+            <input type="date" name="start_date" id="start_date" style="width: 400px" >
+            
+            <span style="width: 150px; margin-left: auto;"><h3>End Date:</h3></span>
+            <input type="date" name="end_date" id="end_date" style="width: 400px" value="{{ today }}" max="{{ today }}">
+        </div>
+        
+        <div style="display: flex; align-items: center; height: 45px; gap: 8px">
+            <span style="width: 150px;"><h3>Status:</h3></span>
+            <span>
+                <input type="checkbox" name="saved" value="1" id="s-saved" hidden checked>
+                    <label for="s-saved" class="rounded-box-toggle" style="--clr: darkorange;">Saved</label>
+    
+                <input type="checkbox" name="paid" value="1" id="s-paid" hidden checked>
+                    <label for="s-paid" class="rounded-box-toggle" style="--clr: mediumseagreen;">Paid</label>
+                <!-- <div class="rounded-box" style="--clr: mediumseagreen;"> Paid </div> -->
+            </span>
+            <span style="width: 20px"></span>
+            (Press to show / hide)
+        </div>
+        
+        {% if user.role == 'staff' %}
+        <div style="display: flex; align-items: center; height: 45px;">
+            <span style="width: 150px;"><h3>User:</h3></span>
+            <input style="width: 500px" type="text" name="user">
+            <span style="width: 20px"></span>
+            (User ID or Name)
+
+        </div>
+        {% endif %}
+    </form>
+
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h2 style="margin: 0;">Order History</h2>
+        <!-- Only users can perform actions to orders -->
+        {% if user.role != 'staff' %}
+        <div style="display: flex; align-items: center; gap: 6px;">
+            <span style="font-size: 14px; white-space: nowrap;">Show actions</span>
+            <input type="checkbox"
+                id="show-actions"
+                {{ 'checked' if show_actions else '' }}
+                onchange="toggleActions()"
+                style="width: 14px; height: 14px; cursor: pointer;"
+            >
+        </div>
+        {% endif %}
+    </div>
+    <br>
+    {% include 'order/table.html' %}
+</div>
+
+{% endblock %}

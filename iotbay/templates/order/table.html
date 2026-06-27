@@ -1,0 +1,40 @@
+<div id="orders-table">
+    <table>
+        {% if user.role == 'staff' %}
+        <colgroup>
+            <col style="width: 10%;">
+            <col style="width: 10%;">
+            <col style="width: 10%;">
+            <col style="width: 15%;">
+            <col style="width: 40%;">
+            <col style="width: 15%;">
+        </colgroup>
+        {% endif %}
+
+        {% if user.role != 'staff' %}
+        <colgroup>
+            <col style="width: 10%;">
+            <col style="width: 10%;">
+            <col style="width: 10%;">
+            <col style="width: 40%;">
+            <col style="width: 15%;">
+        </colgroup>
+        {% endif %}
+        
+        <thead>
+            <th scope="col">Order ID</th>
+            <th scope="col">Placed Date</th>
+            <th scope="col">Total Price</th>
+            {% if user.role == 'staff' %}<th scope="col">User</th>{% endif %}
+            <th scope="col">Items</th>
+            <th id="actions-header">{{ 'Actions' if show_actions else 'Status' }}</th>
+            <!-- Proceed to payment, or receipt -->
+        </thead>
+
+        <tbody>
+            {% for order in orders %}
+            {% include 'order/row.html' %}
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

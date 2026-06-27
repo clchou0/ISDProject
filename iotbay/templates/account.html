@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h1>My Account</h1>
+    <span class="text-muted">You are a <span class="text-bold">{{ user.role|title }}</span></span>
+  </div>
+
+  <div id="feedback"></div>
+
+  <form hx-put="/api/users/me" hx-target="#feedback" hx-swap="innerHTML"
+    hx-on:input="document.getElementById('feedback').textContent=''">
+    <div class="form-grid">
+      <div>
+        <label for="name" class="asterisk">Name</label>
+        <input type="text" name="name" value="{{ user.name }}" required>
+      </div>
+      <div>
+        <label for="email" class="asterisk">Email</label>
+        <input type="email" name="email" value="{{ user.email }}" required>
+      </div>
+      <div>
+        <label for="phone">Phone</label>
+        <input type="tel" name="phone" value="{{ user.phone or '' }}">
+      </div>
+      <div>
+        <label for="address">Address</label>
+        <input type="text" name="address" value="{{ user.address or '' }}">
+      </div>
+      {% if user.role == 'staff' %}
+      <div>
+        <label for="staff_id">Staff ID</label>
+        <input type="text" value="{{ user.staff_id or '' }}" disabled>
+      </div>
+      <div>
+        <label for="position">Position</label>
+        <input type="text" name="position" value="{{ user.position or '' }}">
+      </div>
+      {% endif %}
+    </div>
+
+    <label for="password">New Password</label>
+    <input type="password" name="password" minlength="8" placeholder="At least 8 characters">
+
+    <div class="btn-row">
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+      <button type="button" class="btn btn-danger" hx-delete="/api/users/me" hx-target="#feedback" hx-swap="innerHTML"
+        hx-confirm="Are you sure you want to deactivate your account?">
+        Deactivate Account
+      </button>
+    </div>
+  </form>
+</div>
+
+<div>
+  <div>
+    <h2>Access Logs</h2>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Login/Logout</th>
+        <th>Timestamp (UTC)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for log in access_logs %}
+      <tr>
+        <td>{{ log.user }}</td>
+        <td>
+          {% if log.type == 0 %}
+          <span>LOGIN</span>
+          {% else %}
+          <span>LOGOUT</span>
+          {% endif %}
+        </td>
+        <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S')}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<!--
+Feature 01: Access logs
+- View access logs
+- Search logs by date
+
+Feature 04: Payment methods
+- Create, edit, and delete payment methods
+- Search by type
+-->
+{% if user.role == 'customer' %}
+
+<div class="card" style="margin-top: 12px;">
+  <div class="card-header">
+    <h1>Payment Methods</h1>
+  </div>
+  <p class="text-muted">Manage your saved credit cards and bank transfer details.</p>
+  <div class="btn-row">
+    <a href="/payment-methods" class="btn btn-primary">Manage Payment Methods</a>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

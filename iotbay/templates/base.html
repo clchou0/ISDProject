@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %} - IoTBay</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <nav class="navbar">
+      <a href="/" class="nav-title">IoTBay</a>
+      {% if user %}
+      <div class="nav-links">
+        <a href="/devices">Devices</a>
+        <a href="/orders">Orders</a>
+        {% if user.role == 'customer' %}
+        <a href="/payment-methods">Payment Methods</a>
+        {% endif %}
+        <a href="/account">Account</a>
+      </div>
+      {% endif %}
+      <div class="nav-user">
+        {% if user %}
+        <span class="nav-greeting">{{ user.name }}</span>
+        <button hx-post="/api/auth/logout" class="btn btn-sm">Sign Out</button>
+        {% else %}
+        <a href="/sign-in">Sign In</a>
+        <a href="/register">Register</a>
+        {% endif %}
+      </div>
+    </nav>
+
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+      <i class="text-muted">Designed by Savio, Tomas, Felix, Jonathan, Brad and Charlie</i>
+      <span class="text-muted">41025 ISD Assignment 1</span>
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='index.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,296 @@
+*,
+*::before,
+*::after {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+:root {
+	color-scheme: light dark;
+	--bg: gainsboro;
+	--surface: #e4e4e4;
+	--fg: #efefef;
+	--text: #222;
+	--muted: #555;
+	--border: #999;
+	--primary: #036;
+	--danger: #900;
+	--error-bg: #fdd;
+	--error-text: #800;
+	--success-bg: #dfd;
+	--success-text: #040;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--bg: #1a1a1a;
+		--surface: #202020;
+		--fg: #252525;
+		--text: #ccc;
+		--muted: #777;
+		--border: #444;
+		--primary: #6af;
+		--danger: #d55;
+		--error-bg: #311;
+		--error-text: #faa;
+		--success-bg: #131;
+		--success-text: #9d9;
+	}
+}
+
+body {
+	font-family: Verdana, Geneva, Tahoma, sans-serif;
+	font-size: 15px;
+	background: var(--bg);
+	color: var(--text);
+	line-height: 1.6;
+}
+
+a {
+	color: var(--primary);
+}
+
+.wrapper {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.navbar {
+	display: flex;
+	align-items: center;
+	padding: 8px 12px;
+	background: var(--fg);
+	border-bottom: 2px solid var(--border);
+}
+
+.nav-title {
+	font-weight: bold;
+	font-size: 15px;
+	color: var(--primary);
+	text-decoration: none;
+}
+
+.nav-links {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-left: 12px;
+}
+
+.nav-links a {
+	text-decoration: underline;
+}
+
+.nav-user {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-left: auto;
+}
+
+.nav-user a {
+	text-decoration: underline;
+}
+
+.nav-greeting {
+	color: var(--muted);
+}
+
+.container {
+	padding: 15px;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-top: none;
+	min-height: calc(100vh - 42px);
+}
+
+.card {
+	background: var(--fg);
+	border: 1px solid var(--border);
+	padding: 16px;
+}
+
+.card-narrow {
+	max-width: 400px;
+	margin: 0 auto;
+}
+
+.card-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
+
+h1 {
+	font-size: 18px;
+}
+
+form {
+	margin-top: 10px;
+}
+
+label {
+	display: block;
+	margin: 8px 0 2px;
+	font-weight: bold;
+}
+
+input,
+select {
+	width: 100%;
+	padding: 4px 6px;
+	border: 1px solid var(--border);
+	font: inherit;
+	background: var(--fg);
+	color: var(--text);
+}
+
+input:disabled {
+	opacity: 0.5;
+}
+
+.form-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0 10px;
+}
+
+.btn {
+	padding: 4px 12px;
+	font: inherit;
+	line-height: 1.6;
+	border: 1px solid var(--border);
+	background: var(--fg);
+	color: var(--text);
+	cursor: pointer;
+}
+
+.btn-primary {
+	background: var(--primary);
+	border-color: var(--primary);
+	color: white;
+}
+
+.btn-danger {
+	background: var(--danger);
+	border-color: var(--danger);
+	color: white;
+}
+
+.btn-sm {
+	padding: 2px 8px;
+}
+
+.btn-block {
+	width: 100%;
+	margin-top: 10px;
+}
+
+.btn-row {
+	display: flex;
+	gap: 6px;
+	margin-top: 12px;
+}
+
+.alert {
+	padding: 6px 8px;
+	margin-top: 8px;
+	border: 1px solid var(--border);
+}
+
+.alert-error {
+	background: var(--error-bg);
+	color: var(--error-text);
+}
+
+.alert-success {
+	background: var(--success-bg);
+	color: var(--success-text);
+}
+
+.asterisk::before {
+	content: "* ";
+	color: var(--danger);
+}
+
+.text-bold {
+	font-weight: bold;
+}
+
+.text-muted {
+	color: var(--muted);
+}
+
+.text-center {
+	text-align: center;
+	margin-top: 10px;
+}
+
+.footer {
+	padding: 8px 12px;
+	font-size: 12px;
+	display: flex;
+	justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+	.form-grid {
+		grid-template-columns: 1fr;
+	}
+	.btn-row {
+		flex-direction: column;
+	}
+	.navbar {
+		flex-wrap: wrap;
+		gap: 6px;
+	}
+	.nav-links {
+		flex-wrap: wrap;
+		gap: 6px;
+	}
+}
+
+
+table, th, tr, td {
+	border: solid white 1px;
+	border-collapse: collapse;
+}
+
+th, td {
+	padding: 0.25rem;
+}
+
+
+table form, td div{
+	display: flex;
+	flex-direction: row;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.rounded-box {
+	display: inline-block;
+	border-radius: 10px;
+	padding: 4px 16px;  /* wider horizontal padding */
+	/* background: rgba(from var(--clr) r g b / 0.15); */
+	color: var(--clr);
+	border: 2px solid var(--clr);
+}
+
+.rounded-box-toggle {
+	color: var(--clr);
+	border: 1px solid var(--clr);
+	padding: 4px 12px;
+	border-radius: 8px;
+	display: inline-block;
+	cursor: pointer;
+}
+input[type="checkbox"]:checked + label.rounded-box-toggle {
+	background: color-mix(in srgb, var(--clr) 30%, transparent);
+	border-color: var(--clr);
+}

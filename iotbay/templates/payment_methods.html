@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Payment Methods{% endblock %}
+
+{% block content %}
+
+<!--filter and list -->
+<div class="card">
+    <div class="card-header">
+        <h1>Payment Methods</h1>
+        <a href="/account">&larr; Back to Account</a>
+    </div>
+      <div style="display: flex; gap: 8px; align-items: center; margin-top: 8px;">
+    <label for="type-filter" style="margin: 0;">Filter by type:</label>
+    <select id="type-filter" style="width: auto;">
+      <option value="">All</option>
+      <option value="credit_card">Credit Card</option>
+      <option value="bank_transfer">Bank Transfer</option>
+    </select>
+    <button class="btn btn-sm" onclick="loadMethods()">Search</button>
+  </div>
+
+  <div id="feedback"></div>
+  <div id="pm-list" style="margin-top: 12px;">
+    <p class="text-muted">Loading...</p>
+  </div>
+
+
+</div>
+
+<!--add credit card-->
+
+<div class="card" style="margin-top: 12px;">
+  <h1>Add Credit Card</h1>
+  <div id="add-cc-feedback"></div>
+
+  <div class="form-grid">
+    <div>
+      <label for="card_number" class="asterisk">Card Number</label>
+      <input type="text" id="card_number" maxlength="19" placeholder="1234 5678 9012 3456">
+    </div>
+    <div>
+      <label for="card_expiry" class="asterisk">Expiry (MM/YY)</label>
+      <input type="text" id="card_expiry" maxlength="5" placeholder="MM/YY">
+    </div>
+  </div>
+  <label for="cardholder_name" class="asterisk">Cardholder Name</label>
+  <input type="text" id="cardholder_name" maxlength="100" placeholder="As shown on card">
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="submitAdd('credit_card')">Add Credit Card</button>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+<tr>
+    <th scope="row"> {{ order.id }} </th>
+    <td style="text-align:center;"> {{ order.order_date.strftime('%Y/%m/%d') }} </td>
+    <td style="text-align:center;"> {{ "$%.2f"|format(order.total_price/100) }} </td>
+    {% if user.role == 'staff' %} <td> {{order.user.name}} (#{{ order.user.id }}) </td> {% endif %}
+    
+    <td> 
+        {% for item in order.items %}
+        <div style="display:flex; justify-content:space-between; padding:0 16px;">
+            <span>{{ item.quantity }} × {{ item.device_name }}</span>
+            <span>${{ "%.2f"|format(item.quantity * item.unit_price / 100) }}</span>
+        </div>
+        {% endfor %}
+    </td>
+
+    <td style="text-align: center; vertical-align: middle; gap: 8px; ">
+        <div class="action-content" style="display: none;">
+        {% if order.order_status == 'saved' %}
+        <!-- Not yet paid behavior: update / pay / delete -->
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                <button type="button" class="btn btn-primary" hx-post="/api/orders/checkout/{{order.id}}" hx-target="#feedback">
+                    Make Payment
+                </button>
+                
+                <a href="/api/devices/{{ order.id }}" class="btn btn-primary" style="text-decoration:none;">
+                    Update Order
+                </a>
+
+                <button type="button" class="btn btn-danger" hx-delete="/api/orders/{{order.id}}" hx-target="closest tr" hx-confirm="Are you sure you wish to delete order {{order.id}}?">
+                    Delete Order
+                </button>
+            </div>
+        <!-- Paid: views receipt (deadlocked method? with time?) -->
+        {% else %}
+            <!-- <td style="vertical-align: middle; text-align: center;"> -->
+                <button type="button" class="btn btn-primary" hx-target="#feedback">
+                    View Payment
+                </button>
+            <!-- </td> -->
+        {% endif %}
+        </div>
+        <div class="status-content" style="display: block;">
+            {% if order.order_status == 'saved' %}
+            <div class="rounded-box" style="--clr: darkorange;"> Saved </div>
+            {% else %}
+                <div class="rounded-box" style="--clr: mediumseagreen;"> Paid </div>
+            {% endif %}
+        </div>
+    </td>
+
+</tr>

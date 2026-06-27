@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Payment{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div id="feedback"></div>
+  <h3>Payment for order {{id}} </h3>
+  <br>
+  <div style="text-align: center; padding-left: 20%; padding-right: 20%">
+      <label for="p_method"><h3>Select Payment Method: </h3></label>
+
+      <select name="p_method" id="p_method">
+        {% for method in methods %}
+          <option value="{{ method.id }}">
+            {{ method.name }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <!-- Payment method visualization?? -->
+  </div>
+
+  <br><br>
+
+  <div style="text-align: center; padding-left: 20%; padding-right: 20%">
+      <h3>Order Summary</h3>
+
+      {% for item in items %}
+          <div style="display:flex; justify-content:space-between; padding:0 16px;">
+              <span>{{ item.quantity }} × {{ item.device_name }}</span>
+              <span>${{ "%.2f"|format(item.quantity * item.unit_price / 100) }}</span>
+          </div>
+      {% endfor %}
+      <br><br>
+
+      <h4>Total: {{ "$%.2f"|format(total_price/100) }}</h4>
+
+      <button type="button" class="btn btn-primary" hx-post="/api/payments/{{id}}" hx-target="#feedback">
+          Make Payment
+      </button>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+<tr id="device-{{device.id}}">
+    <th scope="row">{{device.name}}</th>
+    <td>{{device.type}}</td>
+    <td> {{ "$%.2f"|format(device.price/100) }} </td>
+
+    <td>
+    {% if device.stock != 0 %} {{device.stock}} in stock {% endif %}
+    {% if device.stock == 0 %} Out of stock {% endif %}
+    <br>
+    {% if order_id %} Original order: {{ items.get(device.id, 0) }} {% endif %}
+    </td>
+
+    {% if user.role != 'staff' %}
+    <td scope="row">
+        <!-- New order -->
+        {% if order_id %}
+        <input 
+            type="number"
+            name="{{device.id}}"
+            min="0"
+            value="{{items.get(device.id, 0)}}"
+            max="{{device.stock + items.get(device.id, 0)}}"
+
+            hx-post="/api/orders/update/{{device.id}}/{{items.get(device.id, 0)}}"
+            hx-trigger="change delay:10ms"
+            hx-target="this"
+            hx-swap="outerHTML"
+        >
+        {% else %}
+        <input 
+            type="number"
+            name="{{device.id}}"
+            min="0"
+            value="0"
+            max="{{device.stock}}"
+
+            hx-post="/api/orders/update/{{device.id}}/0"
+            hx-trigger="change delay:10ms"
+            hx-target="this"
+            hx-swap="outerHTML"
+        >
+        {% endif %}
+    </td>
+    {% endif %}
+
+    {% if user.role == 'staff' %}
+    <td>
+        <div class="catalogue-staff-tools">
+            <button type="button" class="btn" onclick="editDeviceRecord(this)">✎</button>
+            <button type="button" class="btn btn-danger" hx-delete="/api/devices/{{device.id}}" hx-target="closest tr" hx-confirm="Are you sure you wish to delete {{device.name}}?">x</button>
+        </div>
+        <div style="display: none;" class="catalogue-edit-modal">
+            <button type="button" class="btn btn-primary" hx-include="closest tr" hx-target="closest tr" hx-put="/api/devices/{{device.id}}" hx-swap="outerHTML">✓</button>
+            <button type="button" class="btn btn-danger" onclick="revertEdit(this)">⎌</button>
+        </div>
+    </td>
+    {% endif %}
+</tr>

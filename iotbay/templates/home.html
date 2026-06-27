@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="card card-narrow">
+  <h1>Welcome to IoTBay</h1>
+  {% if user %}
+  <p class="text-muted"><em>You are signed in as {{ user.name }} with email {{ user.email }}</em></p>
+  {% endif %}
+  <p style="margin-top: 12px;">IoTBay is a marketplace for IoT devices.</p>
+  <p style="margin-top: 12px;">Use the nav bar at the top to manage your account, view your orders or buy a device.</p>
+</div>
+{% endblock %}

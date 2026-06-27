@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Devices{% endblock %}
+
+{% block content %}
+
+<style>
+	table {
+		width: 100%;
+		table-layout: fixed;
+	}
+</style>
+
+<!--
+Feature 02: IoT Device Catalogue
+
+- Display device catalogue with search by name and type
+- Staff/admin can create, edit, and delete devices
+-->
+
+<div class="card">
+	<div id="feedback"></div>
+	<div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px;">
+		<!-- Header sections that tells users what is being performed at the spot -->
+		<h2>Device Catalogue</h2>
+		{% if not order_id %}
+			<span> <h4>Creating a new order</h4> </span>
+		{% else %}
+			<span> <h4> Editing order #{{order_id}} </h4> </span>
+		{% endif %}
+	</div>
+
+	<form hx-get="/api/devices/" hx-params="*" hx-target="#device-catalogue" hx-trigger="input changed delay:400ms, search" hx-swap="outerHTML">
+		<div style="display: flex; justify-content: center; gap: 50px; margin-bottom: 30px;">
+			<div>
+				<label for="query">Device:</label>
+				<input type="text" name="query" placeholder="Search by name" style="width: 500px">
+			</div>
+			<div>
+				<label for="type">Device Type:</label>
+				<input type="text" name="type" placeholder="Search by type" style="width: 500px">
+			</div>
+		</div>
+	</form>
+	
+	<!-- Form type difference: -->
+	{% if not order_id %}
+	<!-- If no order id given, sends to CREATE an order -->
+	<form hx-post="/api/orders/" hx-target="#feedback" hx-swap="innerHTML" htmx-target-error="#feedback">
+	{% else %}
+	<!-- If order id is given, sends to UPDATE selected order -->
+	<form hx-put="/api/orders/{{order_id}}" hx-target="#feedback" hx-swap="innerHTML" htmx-target-error="#feedback">
+	{% endif %}
+
+	<table>
+		<thead>
+			<th scope="col">Name</th>
+			<th scope="col">Type</th>
+			<th scope="col">Pricing (AUD)</th>
+			<th scope="col">Availability</th>
+
+			{% if user.role != 'staff' %}<th scope="col">Order</th>{% endif %}
+			{% if user.role == 'staff' %}<th scope="col">Staff Tools</th>{% endif %}
+		</thead>
+		{% include 'device/catalogue.html' %}
+		</table>
+	{% if user.role != 'staff' %}
+		{% if not order_id %}
+			<div style="display: flex; justify-content: center; width: 100%; margin-top: 20px;">
+				<button type="submit" class="btn btn-primary">Create Order</button>
+			</div>
+		{% else %}
+			<div style="display: flex; justify-content: center; width: 100%; margin-top: 20px;">
+				<button type="submit" class="btn btn-primary">Update Order</button>
+			</div>
+		{% endif %}
+	{% endif %}
+	</form>
+
+	<!-- Shows "create listing" example-->
+	{% if user.role == 'staff' %}
+	<table>
+		<tfoot>
+			<form hx-post="/api/devices/" hx-target="#device-catalogue" hx-swap="beforeend">
+				<td scope="row"><input type="text" name="name" required placeholder="45m Ethernet UTP"></td>
+				<td scope="row"><input type="text" name="type" required placeholder="Cable"></td>
+				<td scope="row"><input type="number" name="price" required placeholder="1995"></td>
+				<td scope="row"><input type="number" name="stock" required min="0" placeholder="1"></td>
+				<td scope="row"><button type="submit" class="btn btn-primary" style="width: 100%;">Create Listing</button></td>
+			</form>
+		</tfoot>
+	</table>
+	{% endif %}
+
+</div>
+
+
+{% endblock %}

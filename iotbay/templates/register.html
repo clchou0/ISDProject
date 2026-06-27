@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="card card-narrow">
+  <h1>Register</h1>
+  <p class="text-muted">Create an account with IoTBay </p>
+
+  <div id="feedback"></div>
+
+  <form hx-post="/api/auth/register" hx-target="#feedback" hx-swap="innerHTML">
+    <label for="role" class="asterisk">I am a</label>
+    <select id="role" name="role">
+      <option value="customer">Customer</option>
+      <option value="staff">Staff</option>
+    </select>
+
+    <label for="name" class="asterisk">Name</label>
+    <input type="text" name="name" required placeholder="Savio Steev">
+
+    <label for="email" class="asterisk">Email</label>
+    <input type="email" name="email" required placeholder="john@example.com">
+
+    <label for="password" class="asterisk">Password</label>
+    <input type="password" name="password" required minlength="8" pattern="(?=.*[A-Za-z])(?=.*\d).{8,}" placeholder="Minimum 8 characters">
+
+    <label for="phone">Phone</label>
+    <input type="tel" name="phone" placeholder="0404 317 252">
+
+    <div id="customer-fields">
+      <label for="address">Address</label>
+      <input type="text" name="address" placeholder="81 Broadway, Ultimo">
+    </div>
+
+    <div id="staff-fields" hidden>
+      <label for="staff_id" class="asterisk">Staff ID</label>
+      <input type="text" name="staff_id" placeholder="S001">
+
+      <label for="position">Position</label>
+      <input type="text" name="position" placeholder="Manager">
+    </div>
+
+    <button type="submit" class="btn btn-primary btn-block">Register</button>
+  </form>
+
+  <p class="text-center text-muted">Already have an account? <a href="/sign-in">Sign In</a></p>
+</div>
+{% endblock %}
